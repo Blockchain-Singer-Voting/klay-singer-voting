@@ -35,7 +35,7 @@ export default function NavBar({ session }: { session: Session | null }) {
             {session ? (
               <UserDropdown session={session} />
             ) : (
-              <Button onClick={() => setShowSignInModal(true)}>Sign In</Button>
+              <Button onClick={() => setShowSignInModal(true)}>Login</Button>
             )}
           </div>
         </div>

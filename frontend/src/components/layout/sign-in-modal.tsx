@@ -69,17 +69,18 @@ const SignInModal = ({
 
   return (
     <Modal showModal={showSignInModal} setShowModal={setShowSignInModal}>
-      <div className="w-full overflow-hidden shadow-xl md:max-w-md md:rounded-2xl md:border md:border-gray-200">
+      <div className="w-full overflow-hidden shadow-xl md:max-w-md md:rounded-md md:border md:border-gray-200">
         <div className="flex flex-col items-center justify-center space-y-3 border-b border-gray-200 bg-white px-4 py-6 pt-8 text-center md:px-16">
-          <h3 className="font-display text-2xl font-bold">Sign In</h3>
-          <p className="text-sm text-gray-500">
-            Please click below button to sign in.
-          </p>
+          <h3 className="font-display text-2xl font-bold">Login</h3>
+          <p className="text-sm text-gray-500">Please click below button to login.</p>
           {error && <p className="text-sm text-red-500">{error}</p>}
           {isConnected && chain?.id === CONFIGS.CHAIN_ID && (
             <>
-              <p className="text-sm text-green-700">Connect wallet successfully.</p>
-              <p className="text-sm text-green-700">Processing login...</p>
+              <p className="text-sm text-pink-500">
+                Connect wallet successfully.
+                <br />
+                Processing login...
+              </p>
             </>
           )}
         </div>
@@ -89,8 +90,8 @@ const SignInModal = ({
             disabled={signInClicked}
             className={`${
               signInClicked
-                ? 'cursor-not-allowed border-gray-200 bg-gray-100'
-                : 'border border-gray-200 bg-white text-black hover:bg-gray-50'
+                ? 'cursor-not-allowed border-pink-200 bg-pink-100'
+                : 'border border-pink-200 bg-pink-500 text-white hover:bg-pink-50 hover:text-pink-500'
             } flex h-10 w-full items-center justify-center space-x-3 rounded-md border text-sm shadow-sm transition-all duration-75 focus:outline-none`}
             onClick={() => {
               setSignInClicked(true)
@@ -109,7 +110,7 @@ const SignInModal = ({
                   height={50}
                   className="h-5 w-5"
                 />
-                <p>Sign In with MetaMask</p>
+                <p>Login with MetaMask</p>
               </>
             )}
           </button>

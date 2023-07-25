@@ -8,7 +8,6 @@
 'use client'
 
 import Card from '@/components/home/card'
-import Balancer from 'react-wrap-balancer'
 import { useCallback, useEffect, useState } from 'react'
 import {
   useAccount,
@@ -127,6 +126,7 @@ const Home = () => {
   const {
     data: dataApprove,
     isLoading: isLoadingApprove,
+    error: errorApprove,
     isSuccess: isSuccessApprove,
     write: writeApprove,
   } = useContractWrite({
@@ -213,6 +213,12 @@ const Home = () => {
   }, [isSuccessTransactionApprove])
 
   useEffect(() => {
+    if (errorApprove) {
+      toast.error(errorApprove.message.split('.')[0].substring(0, 100))
+    }
+  }, [errorApprove])
+
+  useEffect(() => {
     setIsLoading(
       isLoadingVoting ||
         isFetchingTransaction ||
@@ -297,6 +303,16 @@ const Home = () => {
     }
   }, [dataFetchTime, isSuccessFetchTime])
 
+  useEffect(() => {
+    if (isSuccessTransactionApprove) {
+      // handle voting
+      console.log('Writing contract vote')
+      writeVoting?.({
+        args: [MIN_APPROVE_AMOUNT * Math.pow(10, 18), imageId],
+      })
+    }
+  }, [isSuccessTransactionApprove, imageId])
+
   const onClickVote = useCallback(
     async (index: number) => {
       console.log('Voting for ' + index)
@@ -319,12 +335,13 @@ const Home = () => {
         Number(MIN_APPROVE_AMOUNT * Math.pow(10, 18))
       ) {
         writeApprove?.()
+      } else {
+        // handle voting
+        console.log('Writing contract vote')
+        writeVoting?.({
+          args: [MIN_APPROVE_AMOUNT * Math.pow(10, 18), index],
+        })
       }
-      // handle voting
-      console.log('Writing contract vote')
-      writeVoting?.({
-        args: [MIN_APPROVE_AMOUNT * Math.pow(10, 18), index],
-      })
     },
     [session, chain, writeApprove, writeVoting, dataAllowance, walletAddress],
   )
@@ -339,11 +356,11 @@ const Home = () => {
           <li className="mr-2">
             <a
               href="#voting"
-              className="group inline-flex items-center justify-center rounded-t-lg border-b-2 border-blue-600 p-4 text-blue-600 dark:border-blue-500 dark:text-blue-500"
+              className="group inline-flex items-center justify-center rounded-t-lg border-b-2 border-pink-600 p-4 text-pink-600 dark:border-pink-500 dark:text-pink-500"
               aria-current="page"
             >
               <div className="flex flex-col text-left">
-                <div className="text-lg font-bold">Singer voting</div>
+                <div className="text-lg font-bold">Vietnam Singer</div>
                 {!isLoadingFetchList && (
                   <div className="text-xs text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300">
                     {formatTime(dataTime[0]) + ' UTC'}
@@ -357,10 +374,10 @@ const Home = () => {
           <li className="mr-2">
             <a
               href="#voting"
-              className="group inline-flex items-center justify-center rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+              className="cursor-not-allowed group inline-flex items-center justify-center rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
             >
               <div className="flex flex-col text-left">
-                <div className="text-lg font-bold">Cat voting</div>
+                <div className="text-lg font-bold">US-UK Singer</div>
                 <div className="text-xs text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300">
                   TBD
                   <br />
@@ -372,10 +389,10 @@ const Home = () => {
           <li className="mr-2">
             <a
               href="#voting"
-              className="group inline-flex items-center justify-center rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
+              className="cursor-not-allowed group inline-flex items-center justify-center rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300"
             >
               <div className="flex flex-col text-left">
-                <div className="text-lg font-bold">Earth voting</div>
+                <div className="text-lg font-bold">Korea Singer</div>
                 <div className="text-xs text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300">
                   TBD
                   <br />
@@ -465,7 +482,9 @@ const Home = () => {
                           onClickVote(index + 1)
                         }}
                       >
-                        {isLoading && imageId === index + 1 && <LoadingCircle className="mr-2" />}
+                        {isLoading && imageId === index + 1 && (
+                          <LoadingCircle className="mr-2 inline-block" />
+                        )}
                         {imageId !== index + 1
                           ? 'Vote'
                           : isFetchingTransaction || isLoadingTransactionVoting
@@ -476,6 +495,7 @@ const Home = () => {
                           ? 'Approving'
                           : 'Vote'}
                       </Button>
+                      <div className="text-xs mt-1">Min. approve/vote: {MIN_APPROVE_AMOUNT} SV</div>
                     </div>
                   </div>
                 }

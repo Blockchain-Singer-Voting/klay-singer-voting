@@ -12,7 +12,7 @@ export default function Button(props: any) {
       className={Array.from(
         new Set(
           (className?.split(' ') || []).concat(
-            'rounded-md border border-pink-500 bg-pink-500 p-1.5 px-4 text-sm text-white transition-all hover:border-pink-500 hover:bg-white hover:text-pink-500'.split(
+            'rounded-md border border-pink-500 bg-pink-500 p-1.5 px-4 text-sm text-white transition-all hover:border-pink-500 hover:bg-transparent hover:text-pink-500'.split(
               ' ',
             ),
           ),
